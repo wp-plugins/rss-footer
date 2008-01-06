@@ -6,11 +6,11 @@ Requires at least: 2.2
 Tested up to: 2.3.2
 stable tag: 0.5
 
-This plugin makes it easy to add a line of content to the beginning or the end of your feeds.
+This plugin makes it easy to add a line of content to the beginning or the end of all the articles in your feeds, for instance to display a link back to your blog.
 
 == Description ==
 
-This plugin makes it easy to add a line of content to the beginning or the end of your feeds.
+This plugin makes it easy to add a line of content to the beginning or the end of all the articles in your feeds, for instance to display a link back to your blog.
 
 More info:
 
