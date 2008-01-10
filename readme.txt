@@ -4,7 +4,7 @@ Donate link: http://www.joostdevalk.nl/donate/
 Tags: rss, footer
 Requires at least: 2.2
 Tested up to: 2.3.2
-stable tag: 0.5
+stable tag: 0.6
 
 This plugin makes it easy to add a line of content to the beginning or the end of all the articles in your feeds, for instance to display a link back to your blog.
 
@@ -20,7 +20,7 @@ More info:
 
 == More info ==
 
-* For more info, version history, etc. check out the page on my site about the [Robots Meta plugin](http://www.joostdevalk.nl/wordpress/meta-robots-wordpress-plugin/). 
+* For more info, version history, etc. check out the page on my site about the [RSS Footer plugin](http://www.joostdevalk.nl/wordpress/rss-footer/). 
 * To check out the other WordPress plugins I wrote, check out my [WordPress plugins](http://www.joostdevalk.nl/wordpress/) page.
 * For updates about this plugin and other plugins I created read my [SEO blog](http://www.joostdevalk.nl/)
 
@@ -29,7 +29,7 @@ More info:
 Installation is easy:
 
 * Download the plugin.
-* Copy rss-footer.php to the plugins directory of your blog.
+* Copy `rss-footer.php` to the plugins directory of your blog.
 * Enable the plugin in your admin panel.
 * An options panel will appear under Options.
 * Choose the line you want to add.

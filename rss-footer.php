@@ -30,6 +30,12 @@ if ( ! class_exists( 'RSSFoot_Admin' ) ) {
 				if (isset($_POST['position']) && $_POST['position'] != "") 
 					$options['position'] 	= $_POST['position'];
 				
+				if (isset($_POST['postlink'])) {
+					$options['postlink'] = true;
+				} else {
+					$options['postlink'] = false;
+				}
+				
 				$options['everset'] = true;
 				
 				$opt = serialize($options);
@@ -42,25 +48,44 @@ if ( ! class_exists( 'RSSFoot_Admin' ) ) {
 			?>
 			<div class="wrap">
 				<h2>RSS Footer options</h2>
-				<fieldset>
-					<form action="" method="post" id="rssfooter-conf">
-						<?php
-						if ( function_exists('wp_nonce_field') )
-							wp_nonce_field('rssfooter-config');
-						?>
-						<p>
-							<label for="footerstring">String to put in the footer, HTML allowed:</label><br/>
-							<input size="120" type="text" id="footerstring" name="footerstring" <?php echo 'value="'.stripslashes(htmlentities($options['footerstring'])).'" '; ?>/><br/>
-							<br/>
-							<label for="position">Where do you want to position this string:</label><br/>
-							<select name="position" id="position">
-								<option value="after" <?php if ($options['position'] == "after") echo 'selected="selected"'?>>after</option>
-								<option value="before" <?php if ($options['position'] == "before") echo 'selected="selected"'?>>before</option>
-							</select>
-						</p>
-						<p class="submit"><input type="submit" name="submit" value="Update Settings &raquo;" /></p>
-					</form>
-				</fieldset>
+				<form action="" method="post" id="rssfooter-conf">
+					<?php
+					if ( function_exists('wp_nonce_field') )
+						wp_nonce_field('rssfooter-config');
+					?>
+					<p class="submit"><input type="submit" name="submit" value="Update Settings &raquo;" /></p>
+					<table class="niceblue" style="width: 100%;">
+						<tr valign="top">
+							<th scrope="row">
+								<label for="footerstring">Content to put in the footer:</label><br/>
+								<small>(HTML allowed)</small>
+							</th>
+							<td>
+								<textarea cols="80" rows="4" id="footerstring" name="footerstring"><?php echo stripslashes(htmlentities($options['footerstring'])); ?></textarea>
+							</td>
+						</tr>
+						<tr>
+							<th scrope="row">
+								<label for="position">Content position:</label>
+							</th>
+							<td>
+								<select name="position" id="position">
+									<option value="after" <?php if ($options['position'] == "after") echo 'selected="selected"'?>>after</option>
+									<option value="before" <?php if ($options['position'] == "before") echo 'selected="selected"'?>>before</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<th scrope="row">
+								Other options:
+							</th>
+							<td>
+								<input type="checkbox" name="postlink" <?php if ($options['postlink']) echo 'checked="checked"'?>/> Include a link back to the post, with post title as anchor text too.
+							</td>
+						</tr>
+					</table>
+					<p class="submit"><input type="submit" name="submit" value="Update Settings &raquo;" /></p>
+				</form>
 			</div>
 <?php		}	
 	}
@@ -79,9 +104,15 @@ function embed_rssfooter($content) {
 	if(is_feed()) {
 		$options  = unserialize(get_option('RSSFooterOptions'));
 		if ($options['position'] == "before") {
-			$content = "<p>" . stripslashes($options['footerstring']) . "</p>" . $content;	
+			if($options['postlink']) {
+				$content = '<p><a href="'.get_the_guid().'">'.get_the_title()."</a></p>\n" . $content;	
+			}
+			$content = "<p>" . stripslashes($options['footerstring']) . "</p>\n" . $content;
 		} else {
-			$content = $content . "<p>" . stripslashes($options['footerstring']) . "</p>";
+			$content = $content . "<p>" . stripslashes($options['footerstring']) . "</p>\n";
+			if($options['postlink']) {
+				$content = $content . '<p><a href="'.get_the_guid().'">'.get_the_title()."</a></p>\n";
+			}
 		}
 	}
 	return $content;
