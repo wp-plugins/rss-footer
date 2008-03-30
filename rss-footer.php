@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: RSS Footer
-Version: 0.7
+Version: 0.7.1
 Plugin URI: http://www.joostdevalk.nl/wordpress/rss-footer/
 Description: Allows you to add a line of content to the end of your RSS feed articles.
 Author: Joost de Valk
@@ -53,8 +53,7 @@ if ( ! class_exists( 'RSSFoot_Admin' ) ) {
 					if ( function_exists('wp_nonce_field') )
 						wp_nonce_field('rssfooter-config');
 					?>
-					<p class="submit"><input type="submit" name="submit" value="Update Settings &raquo;" /></p>
-					<table class="niceblue" style="width: 100%;">
+					<table class="form-table" style="width: 100%;">
 						<tr valign="top">
 							<th scrope="row">
 								<label for="footerstring">Content to put in the footer:</label><br/>
