@@ -3,8 +3,8 @@ Contributors: joostdevalk
 Donate link: http://www.joostdevalk.nl/donate/
 Tags: rss, footer
 Requires at least: 2.2
-Tested up to: 2.3.2
-stable tag: 0.6
+Tested up to: 2.5
+stable tag: 0.7.5
 
 This plugin makes it easy to add a line of content to the beginning or the end of all the articles in your feeds, for instance to display a link back to your blog.
 
