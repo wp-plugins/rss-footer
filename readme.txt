@@ -1,6 +1,6 @@
 === RSS Footer ===
 Contributors: joostdevalk
-Donate link: http://www.joostdevalk.nl/donate/
+Donate link: http://yoast.com/donate/
 Tags: rss, footer
 Requires at least: 2.2
 Tested up to: 2.5
@@ -14,15 +14,15 @@ This plugin makes it easy to add a line of content to the beginning or the end o
 
 More info:
 
-* [RSS Footer plugin](http://www.joostdevalk.nl/wordpress/rss-footer/).
-* Read more about [WordPress SEO](http://www.joostdevalk.nl/wordpress-seo/) so you can get the most out of this plugin.
-* Check out the other [Wordpress plugins](http://www.joostdevalk.nl/wordpress/) by the same author.
+* [RSS Footer plugin](http://yoast.com/wordpress/rss-footer/).
+* Read more about [WordPress SEO](http://yoast.com/articles/wordpress-seo/) so you can get the most out of this plugin.
+* Check out the other [Wordpress plugins](http://yoast.com/wordpress/) by the same author.
 
 == More info ==
 
-* For more info, version history, etc. check out the page on my site about the [RSS Footer plugin](http://www.joostdevalk.nl/wordpress/rss-footer/). 
-* To check out the other WordPress plugins I wrote, check out my [WordPress plugins](http://www.joostdevalk.nl/wordpress/) page.
-* For updates about this plugin and other plugins I created read my [SEO blog](http://www.joostdevalk.nl/)
+* For more info, version history, etc. check out the page on my site about the [RSS Footer plugin](http://yoast.com/wordpress/rss-footer/). 
+* To check out the other WordPress plugins I wrote, check out my [WordPress plugins](http://yoast.com/wordpress/) page.
+* For updates about this plugin and other plugins I created read my [SEO blog](http://yoast.com/)
 
 == Installation ==
 
