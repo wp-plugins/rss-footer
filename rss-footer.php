@@ -41,7 +41,7 @@ if ( ! class_exists( 'RSSFoot_Admin' ) ) {
 				update_option('RSSFooterOptions', $options);
 			}
 			
-			$opt  = get_option('RSSFooterOptions');
+			$options  = get_option('RSSFooterOptions');
 			
 			?>
 			<div class="wrap">
