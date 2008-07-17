@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: RSS Footer
-Version: 0.7.5
-Plugin URI: http://www.joostdevalk.nl/wordpress/rss-footer/
+Version: 0.8
+Plugin URI: http://yoast.com/wordpress/rss-footer/
 Description: Allows you to add a line of content to the end of your RSS feed articles.
 Author: Joost de Valk
-Author URI: http://www.joostdevalk.nl/
+Author URI: http://yoast.com/
 */
 
 if ( ! class_exists( 'RSSFoot_Admin' ) ) {
@@ -38,12 +38,10 @@ if ( ! class_exists( 'RSSFoot_Admin' ) ) {
 				
 				$options['everset'] = true;
 				
-				$opt = serialize($options);
-				update_option('RSSFooterOptions', $opt);
+				update_option('RSSFooterOptions', $options);
 			}
 			
-			$opt  = get_option('RSSFooterOptions');
-			$options = unserialize($opt);
+			$options  = get_option('RSSFooterOptions');
 			
 			?>
 			<div class="wrap">
@@ -90,18 +88,17 @@ if ( ! class_exists( 'RSSFoot_Admin' ) ) {
 	}
 }
 
-$options  = unserialize(get_option('RSSFooterOptions'));
+$options  = get_option('RSSFooterOptions');
 if (!isset($options['everset'])) {
 	// Set default values
 	$options['footerstring'] = "Post from: <a href=\"".get_bloginfo('url')."\">".get_bloginfo('name')."</a>";
 	$options['position'] = "after";
-	$opt = serialize($options);
-	update_option('RSSFooterOptions', $opt);
+	update_option('RSSFooterOptions', $options);
 }
 
 function embed_rssfooter($content) {
 	if(is_feed()) {
-		$options  = unserialize(get_option('RSSFooterOptions'));
+		$options  = get_option('RSSFooterOptions');
 		if ($options['position'] == "before") {
 			if($options['postlink']) {
 				$content = '<p><a href="'.get_permalink().'">'.get_the_title()."</a></p>\n" . $content;	
