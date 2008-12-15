@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: RSS Footer
-Version: 0.7.5
-Plugin URI: http://www.joostdevalk.nl/wordpress/rss-footer/
+Version: 0.8.2
+Plugin URI: http://yoast.com/wordpress/rss-footer/
 Description: Allows you to add a line of content to the end of your RSS feed articles.
 Author: Joost de Valk
-Author URI: http://www.joostdevalk.nl/
+Author URI: http://yoast.com/
 */
 
 if ( ! class_exists( 'RSSFoot_Admin' ) ) {
@@ -16,7 +16,30 @@ if ( ! class_exists( 'RSSFoot_Admin' ) ) {
 			global $wpdb;
 			if ( function_exists('add_submenu_page') ) {
 				add_options_page('RSS Footer Configuration', 'RSS Footer', 10, basename(__FILE__), array('RSSFooter_Admin','config_page'));
+				add_filter( 'plugin_action_links', array( 'RSSFooter_Admin', 'filter_plugin_actions'), 10, 2 );
+				add_filter( 'ozh_adminmenu_icon', array( 'RSSFooter_Admin', 'add_ozh_adminmenu_icon' ) );				
 			}
+		}
+		
+		function add_ozh_adminmenu_icon( $hook ) {
+			static $rssfooticon;
+			if (!$rssfooticon) {
+				$rssfooticon = WP_CONTENT_URL . '/plugins/' . plugin_basename(dirname(__FILE__)). '/feed_edit.png';
+			}
+			if ($hook == 'rss-footer.php') return $rssfooticon;
+			return $hook;
+		}
+
+		function filter_plugin_actions( $links, $file ){
+			//Static so we don't call plugin_basename on every plugin row.
+			static $this_plugin;
+			if ( ! $this_plugin ) $this_plugin = plugin_basename(__FILE__);
+			
+			if ( $file == $this_plugin ){
+				$settings_link = '<a href="options-general.php?page=rss-footer.php">' . __('Settings') . '</a>';
+				array_unshift( $links, $settings_link ); // before other links
+			}
+			return $links;
 		}
 		
 		function config_page() {
@@ -38,12 +61,10 @@ if ( ! class_exists( 'RSSFoot_Admin' ) ) {
 				
 				$options['everset'] = true;
 				
-				$opt = serialize($options);
-				update_option('RSSFooterOptions', $opt);
+				update_option('RSSFooterOptions', $options);
 			}
 			
-			$opt  = get_option('RSSFooterOptions');
-			$options = unserialize($opt);
+			$options  = get_option('RSSFooterOptions');
 			
 			?>
 			<div class="wrap">
@@ -90,18 +111,17 @@ if ( ! class_exists( 'RSSFoot_Admin' ) ) {
 	}
 }
 
-$options  = unserialize(get_option('RSSFooterOptions'));
+$options  = get_option('RSSFooterOptions');
 if (!isset($options['everset'])) {
 	// Set default values
 	$options['footerstring'] = "Post from: <a href=\"".get_bloginfo('url')."\">".get_bloginfo('name')."</a>";
 	$options['position'] = "after";
-	$opt = serialize($options);
-	update_option('RSSFooterOptions', $opt);
+	update_option('RSSFooterOptions', $options);
 }
 
 function embed_rssfooter($content) {
 	if(is_feed()) {
-		$options  = unserialize(get_option('RSSFooterOptions'));
+		$options  = get_option('RSSFooterOptions');
 		if ($options['position'] == "before") {
 			if($options['postlink']) {
 				$content = '<p><a href="'.get_permalink().'">'.get_the_title()."</a></p>\n" . $content;	
@@ -118,6 +138,7 @@ function embed_rssfooter($content) {
 }
 
 add_filter('the_content', 'embed_rssfooter');
+add_filter('the_excerpt_rss', 'embed_rssfooter');
 
 add_action('admin_menu', array('RSSFooter_Admin','add_config_page'));
 
