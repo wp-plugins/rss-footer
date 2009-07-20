@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: RSS Footer
-Version: 0.9
+Version: 0.9.1
 Plugin URI: http://yoast.com/wordpress/rss-footer/
 Description: Allows you to add a line of content to the end of your RSS feed articles.
 Author: Joost de Valk
@@ -61,13 +61,23 @@ if ( ! class_exists( 'RSSFooter_Admin' ) ) {
 								"id" => "footerstring",
 								"label" => "Content to put in the footer",
 								"desc" => "(HTML allowed)",
-								"content" => '<textarea cols="50" rows="10" id="footerstring" name="footerstring">'.stripslashes(htmlentities($options['footerstring'])).'</textarea>',
+								"content" => '<textarea cols="50" onchange="javascript:updatePreview();" rows="10" id="footerstring" name="footerstring">'.stripslashes(htmlentities($options['footerstring'])).'</textarea>',
 							);
 							$rows[] = array(
 								"label" => 'Explanation',
-								"content" => 'You can use %%POSTLINK%% within the content, this will be replaced by a link to the post with the title of the post as the anchor text.'
+								"content" => 'You can use %%POSTLINK%% within the content, this will be replaced by a link to the post with the title of the post as the anchor text. If you update the text above, check the preview below.'
 							);
-							$this->postbox('rssfootercontent','Content',$this->form_table($rows));
+							$this->postbox('rssfootercontent','Content of your RSS Footer',$this->form_table($rows));
+							$this->postbox('rssfooterpreview','Preview of your RSS Footer','<div id="preview">You need JavaScript enabled for the preview to work.</div><script type="text/javascript" charset="utf-8">
+								function nl2br(str) {
+									return (str + \'\').replace(/([^>]?)\n/g, \'$1\'+ \'<br/>\' +\'\n\');
+								}
+								jQuery("#footerstring").change( function() {
+									var text = jQuery("#footerstring").val();
+									text = text.replace("%%POSTLINK%%","<a href=#>Test post</a>");
+									jQuery("#preview").html(nl2br(text));									
+								}).change();
+							</script>');
 							$rows = array();
 							$rows[] = array(
 								"id" => "position",
