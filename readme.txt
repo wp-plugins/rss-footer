@@ -2,9 +2,9 @@
 Contributors: joostdevalk
 Donate link: http://yoast.com/donate/
 Tags: rss, footer
-Requires at least: 2.2
-Tested up to: 2.7
-stable tag: 0.8.2
+Requires at least: 2.7
+Tested up to: 2.8.2
+stable tag: 0.9
 
 This plugin makes it easy to add a line of content to the beginning or the end of all the articles in your feeds, for instance to display a link back to your blog.
 
@@ -17,6 +17,37 @@ More info:
 * [RSS Footer plugin](http://yoast.com/wordpress/rss-footer/).
 * Read more about [WordPress SEO](http://yoast.com/articles/wordpress-seo/) so you can get the most out of this plugin.
 * Check out the other [Wordpress plugins](http://yoast.com/wordpress/) by the same author.
+
+== Changelog ==
+
+= 0.9 =
+* Switched to new Yoast plugin backend.
+* Added option to place link to post everywhere in the footer.
+* Switched to new changelog format.
+
+= 0.8.2 =
+* Added settings link in the plugin menu and Ozh Menu icon.
+
+= 0.8.1 =
+* Fixed an issue where global options would collide.
+
+= 0.8 =
+* Fixes for WordPress 2.6.
+
+= 0.7.5 =
+* Fixed wrong function call.
+
+= 0.7.1 =
+* Updated interface for 2.5 standards
+
+= 0.7 =
+* Fixed a bug which caused everyone to be able to see the plugins options.
+
+= 0.6 =
+* Added content position option.
+
+= 0.5 =
+* Initial commit.
 
 == More info ==
 
