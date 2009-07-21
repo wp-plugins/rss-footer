@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: RSS Footer
-Version: 0.9.1
+Version: 0.9.2
 Plugin URI: http://yoast.com/wordpress/rss-footer/
 Description: Allows you to add a line of content to the end of your RSS feed articles.
 Author: Joost de Valk
@@ -140,7 +140,7 @@ function embed_rssfooter($content) {
 		$postlink = '<a href="'.get_permalink().'">'.get_the_title()."</a>";
 		
 		$rssfootcontent = stripslashes($options['footerstring']);
-		$rssfootcontent = str_replace("POSTLINK",$postlink,$rssfootcontent);
+		$rssfootcontent = str_replace("%%POSTLINK%%",$postlink,$rssfootcontent);
 		
 		if ($options['position'] == "before") {
 			if($options['postlink']) {
