@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Backend Class for use in all Yoast plugins
+ * Version 0.1.1
+ */
+
 if (!class_exists('Yoast_Plugin_Admin')) {
 	class Yoast_Plugin_Admin {
 
@@ -94,7 +99,7 @@ if (!class_exists('Yoast_Plugin_Admin')) {
 			$content = '<table class="form-table">';
 			foreach ($rows as $row) {
 				$content .= '<tr valign="top"><th scrope="row">';
-				if ($row['id'] != '')
+				if (isset($row['id']) && $row['id'] != '')
 					$content .= '<label for="'.$row['id'].'">'.$row['label'].':</label>';
 				else
 					$content .= $row['label'];
