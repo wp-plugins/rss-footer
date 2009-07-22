@@ -4,7 +4,7 @@ Donate link: http://yoast.com/donate/
 Tags: rss, footer
 Requires at least: 2.7
 Tested up to: 2.8.2
-stable tag: 0.9.3
+stable tag: 0.9.4
 
 This plugin makes it easy to add a line of content to the beginning or the end of all the articles in your feeds, for instance to display a link back to your blog.
 
@@ -19,6 +19,9 @@ More info:
 * Check out the other [Wordpress plugins](http://yoast.com/wordpress/) by the same author.
 
 == Changelog ==
+
+= 0.9.4 =
+* Added missing CSS for backend class.
 
 = 0.9.3 =
 * Fixed missing image for Ozh admin menu.
