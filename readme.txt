@@ -70,7 +70,7 @@ More info:
 Installation is easy:
 
 * Download the plugin.
-* Copy `rss-footer.php` to the plugins directory of your blog.
+* Copy the `rss-footer` folder to the plugins directory of your blog.
 * Enable the plugin in your admin panel.
 * An options panel will appear under Options.
 * Choose the line you want to add.
