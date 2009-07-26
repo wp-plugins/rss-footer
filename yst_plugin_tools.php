@@ -2,7 +2,7 @@
 
 /**
  * Backend Class for use in all Yoast plugins
- * Version 0.1.1
+ * Version 0.1.2
  */
 
 if (!class_exists('Yoast_Plugin_Admin')) {
@@ -117,21 +117,21 @@ if (!class_exists('Yoast_Plugin_Admin')) {
 		 * Create a "plugin like" box.
 		 */
 		function plugin_like() {
-			$content = '<p>'.__('Why not do any or all of the following:','ystplugin').'</p>';
+			$content = '<p>'.__('Why not do any or all of the following:').'</p>';
 			$content .= '<ul>';
-			$content .= '<li>'.__('Link to it so other folks can find out about it.','ystplugin').'</li>';
-			$content .= '<li><a href="http://wordpress.org/extend/plugins/'.$this->hook.'/">'.__('Give it a good rating on WordPress.org.','ystplugin').'</a></li>';
-			$content .= '<li><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=2017947">'.__('Donate a token of your appreciation.','ystplugin').'</a></li>';
+			$content .= '<li>'.__('Link to it so other folks can find out about it.').'</li>';
+			$content .= '<li><a href="http://wordpress.org/extend/plugins/'.$this->hook.'/">'.__('Give it a good rating on WordPress.org.').'</a></li>';
+			$content .= '<li><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=2017947">'.__('Donate a token of your appreciation.').'</a></li>';
 			$content .= '</ul>';
-			$this->postbox($this->hook.'like', 'Like this plugin?', $content);
+			$this->postbox($this->hook.'like', __('Like this plugin?'), $content);
 		}	
 		
 		/**
 		 * Info box with link to the support forums.
 		 */
 		function plugin_support() {
-			$content = '<p>'.__('If you have any problems with this plugin or good ideas for improvements or new features, please talk about them in the','ystplugin').' <a href="http://wordpress.org/tags/'.$this->hook.'">'.__("Support forums",'ystplugin').'</a>.</p>';
-			$this->postbox($this->hook.'support', 'Need support?', $content);
+			$content = '<p>'.__('If you have any problems with this plugin or good ideas for improvements or new features, please talk about them in the').' <a href="http://wordpress.org/tags/'.$this->hook.'">'.__("Support forums").'</a>.</p>';
+			$this->postbox($this->hook.'support', __('Need support?'), $content);
 		}
 
 		/**
@@ -147,11 +147,11 @@ if (!class_exists('Yoast_Plugin_Admin')) {
 					$content .= '<a class="rsswidget" href="'.clean_url( $item['link'], $protocolls=null, 'display' ).'">'. htmlentities($item['title']) .'</a> ';
 					$content .= '</li>';
 				}
-				$content .= '<li class="rss"><a href="http://yoast.com/feed/">Subscribe with RSS</a></li>';
-				$content .= '<li class="email"><a href="http://yoast.com/email-blog-updates/">Subscribe by email</a></li>';
-				Yoast_Plugin_Admin::postbox('yoastlatest', 'Latest news from Yoast', $content);
+				$content .= '<li class="rss"><a href="http://yoast.com/feed/">'.__('Subscribe with RSS').'</a></li>';
+				$content .= '<li class="email"><a href="http://yoast.com/email-blog-updates/">'.__('Subscribe by email').'</a></li>';
+				$this->postbox('yoastlatest', __('Latest news from Yoast'), $content);
 			} else {
-				Yoast_Plugin_Admin::postbox('yoastlatest', 'Latest news from Yoast', 'Nothing to say...');
+				$this->postbox('yoastlatest', __('Latest news from Yoast'), __('Nothing to say...'));
 			}
 		}
 
@@ -168,7 +168,7 @@ if (!class_exists('Yoast_Plugin_Admin')) {
 			require_once(ABSPATH.WPINC.'/rss.php');  
 			if ( $rss = fetch_rss( 'http://feeds2.feedburner.com/joostdevalk' ) ) {
 				echo '<div class="rss-widget">';
-				echo '<a href="http://yoast.com/" title="Go to Yoast.com"><img src="http://cdn.yoast.com/yoast-logo-rss.png" class="alignright" alt="Yoast"/></a>';			
+				echo '<a href="http://yoast.com/" title="'.__('Go to Yoast.com').'"><img src="http://cdn.yoast.com/yoast-logo-rss.png" class="alignright" alt="Yoast"/></a>';			
 				echo '<ul>';
 				$rss->items = array_slice( $rss->items, 0, 3 );
 				foreach ( (array) $rss->items as $item ) {
@@ -180,16 +180,16 @@ if (!class_exists('Yoast_Plugin_Admin')) {
 				}
 				echo '</ul>';
 				echo '<div style="border-top: 1px solid #ddd; padding-top: 10px; text-align:center;">';
-				echo '<a href="http://feeds2.feedburner.com/joostdevalk"><img src="'.get_bloginfo('wpurl').'/wp-includes/images/rss.png" alt=""/> Subscribe with RSS</a>';
+				echo '<a href="http://feeds2.feedburner.com/joostdevalk"><img src="'.get_bloginfo('wpurl').'/wp-includes/images/rss.png" alt=""/> '.__('Subscribe with RSS').'</a>';
 				echo ' &nbsp; &nbsp; &nbsp; ';
-				echo '<a href="http://yoast.com/email-blog-updates/"><img src="http://cdn.yoast.com/email_sub.png" alt=""/> Subscribe by email</a>';
+				echo '<a href="http://yoast.com/email-blog-updates/"><img src="http://cdn.yoast.com/email_sub.png" alt=""/> '.__('Subscribe by email').'</a>';
 				echo '</div>';
 				echo '</div>';
 			}
 		}
 
 		function widget_setup() {
-		    wp_add_dashboard_widget( 'yoast_db_widget' , 'The Latest news from Yoast (Tools)' , array(&$this, 'db_widget'));
+		    wp_add_dashboard_widget( 'yoast_db_widget' , __('The Latest news from Yoast') , array(&$this, 'db_widget'));
 		}
 	}
 }
