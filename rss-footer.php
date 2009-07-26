@@ -1,65 +1,36 @@
 <?php
 /*
 Plugin Name: RSS Footer
-Version: 0.8.2
+Version: 0.9.5
 Plugin URI: http://yoast.com/wordpress/rss-footer/
 Description: Allows you to add a line of content to the end of your RSS feed articles.
 Author: Joost de Valk
 Author URI: http://yoast.com/
 */
 
-if ( ! class_exists( 'RSSFoot_Admin' ) ) {
+if ( ! class_exists( 'RSSFooter_Admin' ) ) {
 
-	class RSSFooter_Admin {
-		
-		function add_config_page() {
-			global $wpdb;
-			if ( function_exists('add_submenu_page') ) {
-				add_options_page('RSS Footer Configuration', 'RSS Footer', 10, basename(__FILE__), array('RSSFooter_Admin','config_page'));
-				add_filter( 'plugin_action_links', array( 'RSSFooter_Admin', 'filter_plugin_actions'), 10, 2 );
-				add_filter( 'ozh_adminmenu_icon', array( 'RSSFooter_Admin', 'add_ozh_adminmenu_icon' ) );				
-			}
-		}
-		
-		function add_ozh_adminmenu_icon( $hook ) {
-			static $rssfooticon;
-			if (!$rssfooticon) {
-				$rssfooticon = WP_CONTENT_URL . '/plugins/' . plugin_basename(dirname(__FILE__)). '/feed_edit.png';
-			}
-			if ($hook == 'rss-footer.php') return $rssfooticon;
-			return $hook;
-		}
+	require_once('yst_plugin_tools.php');
 
-		function filter_plugin_actions( $links, $file ){
-			//Static so we don't call plugin_basename on every plugin row.
-			static $this_plugin;
-			if ( ! $this_plugin ) $this_plugin = plugin_basename(__FILE__);
-			
-			if ( $file == $this_plugin ){
-				$settings_link = '<a href="options-general.php?page=rss-footer.php">' . __('Settings') . '</a>';
-				array_unshift( $links, $settings_link ); // before other links
-			}
-			return $links;
-		}
+	class RSSFooter_Admin extends Yoast_Plugin_Admin {
+		
+		var $hook 		= 'rss-footer';
+		var $longname	= 'RSS Footer Configuration';
+		var $shortname	= 'RSS Footer';
+		var $filename	= 'rss-footer/rss-footer.php';
+		var $ozhicon	= 'feed_edit.png';
 		
 		function config_page() {
 			if ( isset($_POST['submit']) ) {
 				if (!current_user_can('manage_options')) die(__('You cannot edit the RSS Footer options.'));
 				check_admin_referer('rssfooter-config');
 
-				if (isset($_POST['footerstring']) && $_POST['footerstring'] != "") 
-					$options['footerstring'] 	= $_POST['footerstring'];
-				
-				if (isset($_POST['position']) && $_POST['position'] != "") 
-					$options['position'] 	= $_POST['position'];
-				
-				if (isset($_POST['postlink'])) {
-					$options['postlink'] = true;
-				} else {
-					$options['postlink'] = false;
+				foreach( array('footerstring', 'position') as $val ) {
+					if (isset($_POST[$val]) && $_POST[$val] != "") 
+						$options[$val] 	= $_POST[$val];					
 				}
 				
-				$options['everset'] = true;
+				$options['everset'] = 2;
 				
 				update_option('RSSFooterOptions', $options);
 			}
@@ -68,70 +39,119 @@ if ( ! class_exists( 'RSSFoot_Admin' ) ) {
 			
 			?>
 			<div class="wrap">
-				<h2>RSS Footer options</h2>
-				<form action="" method="post" id="rssfooter-conf">
-					<?php
-					if ( function_exists('wp_nonce_field') )
-						wp_nonce_field('rssfooter-config');
-					?>
-					<table class="form-table" style="width: 100%;">
-						<tr valign="top">
-							<th scrope="row">
-								<label for="footerstring">Content to put in the footer:</label><br/>
-								<small>(HTML allowed)</small>
-							</th>
-							<td>
-								<textarea cols="80" rows="4" id="footerstring" name="footerstring"><?php echo stripslashes(htmlentities($options['footerstring'])); ?></textarea>
-							</td>
-						</tr>
-						<tr>
-							<th scrope="row">
-								<label for="position">Content position:</label>
-							</th>
-							<td>
-								<select name="position" id="position">
-									<option value="after" <?php if ($options['position'] == "after") echo 'selected="selected"'?>>after</option>
-									<option value="before" <?php if ($options['position'] == "before") echo 'selected="selected"'?>>before</option>
-								</select>
-							</td>
-						</tr>
-						<tr>
-							<th scrope="row">
-								Other options:
-							</th>
-							<td>
-								<input type="checkbox" name="postlink" <?php if ($options['postlink']) echo 'checked="checked"'?>/> Include a link back to the post, with post title as anchor text too.
-							</td>
-						</tr>
-					</table>
-					<p class="submit"><input type="submit" name="submit" value="Update Settings &raquo;" /></p>
-				</form>
+				<a href="http://yoast.com/"><div id="yoast-icon" style="background: url(http://cdn.yoast.com/theme/yoast-32x32.png) no-repeat;" class="icon32"><br /></div></a>
+				<h2><?php _e("RSS Footer options"); ?></h2>
+				<div class="postbox-container" style="width:70%;">
+					<div class="metabox-holder">	
+						<div class="meta-box-sortables">
+							<form action="" method="post" id="rssfooter-conf">
+							<?php
+							if ( function_exists('wp_nonce_field') )
+								wp_nonce_field('rssfooter-config');
+								
+							$rows = array();
+							$rows[] = array(
+								"id" => "footerstring",
+								"label" => __("Content to put in the footer"),
+								"desc" => __("(HTML allowed)"),
+								"content" => '<textarea cols="50" onchange="javascript:updatePreview();" rows="10" id="footerstring" name="footerstring">'.stripslashes(htmlentities($options['footerstring'])).'</textarea>',
+							);
+							$rows[] = array(
+								"label" => __('Explanation'),
+								"content" => '<p>'.__('You can use the following variables within the content, they will be replaced by the value on the right.').'</p>'.
+								'<ul>'.
+								'<li><strong>%%POSTLINK%%</strong> : '.__('A link to the post, with the title as anchor text.').'</li>'.
+								'<li><strong>%%BLOGLINK%%</strong> : '.__("A link to your site, with your site's name as anchor text.").'</li>'.
+								'<li><strong>%%BLOGDESCLINK%%</strong> : '.__("A link to your site, with your site's name and description as anchor text.").'</li>'.
+								'</ul>'.
+								'<p>'.__('If you update the text above, check the preview below:').' </p>',
+							);
+							$this->postbox('rssfootercontent',__('Content of your RSS Footer'),$this->form_table($rows));
+							$this->postbox('rssfooterpreview',__('Preview of your RSS Footer'),'<div id="preview">'.__('You need JavaScript enabled for the preview to work.').'</div><script type="text/javascript" charset="utf-8">
+								function nl2br(str) {
+									return (str + \'\').replace(/([^>]?)\n/g, \'$1\'+ \'<br/>\' +\'\n\');
+								}
+								jQuery("#footerstring").change( function() {
+									var text = jQuery("#footerstring").val();
+									text = text.replace("%%POSTLINK%%","<a href=#>Test post</a>");
+									text = text.replace("%%BLOGLINK%%","<a href=\''.get_bloginfo('url').'\'>'.get_bloginfo('name').'</a>");
+									text = text.replace("%%BLOGDESCLINK%%","<a href=\''.get_bloginfo('url').'\'>'.get_bloginfo('name').' - '.get_bloginfo('description').'</a>");
+									jQuery("#preview").html(nl2br(text));									
+								}).change();
+							</script>');
+							$rows = array();
+							$rows[] = array(
+								"id" => "position",
+								"label" => __("Content position"),
+								"content" => '<select name="position" id="position">
+									<option value="after" '.selected($options['position'],"after",false).'>'.__('after').'</option>
+									<option value="before" '.selected($options['position'],"before",false).'>'.__('before').'</option>
+								</select>',
+							);
+							$rows[] = array(
+								"label" => __('Explanation'),
+								"content" => __("The position determines whether the content you've entered above will appear below or above the post.")
+							);
+							$this->postbox('rssfootersettings','Settings',$this->form_table($rows));
+							?>
+							<div class="submit">
+								<input type="submit" class="button-primary" name="submit" value="<?php _e('Update RSS Footer Settings') ?> &raquo;" />
+							</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="postbox-container" style="width:20%;">
+					<div class="metabox-holder">	
+						<div class="meta-box-sortables">
+							<?php
+								$this->plugin_like();
+								$this->plugin_support();
+								$this->news(); 
+							?>
+						</div>
+						<br/><br/><br/>
+					</div>
+				</div>
 			</div>
 <?php		}	
 	}
+	$rssfoot = new RSSFooter_Admin();
 }
 
 $options  = get_option('RSSFooterOptions');
 if (!isset($options['everset'])) {
 	// Set default values
-	$options['footerstring'] = "Post from: <a href=\"".get_bloginfo('url')."\">".get_bloginfo('name')."</a>";
+	$options['footerstring'] = "%%POSTLINK%% ".__("is a post from").": <a href=\"".get_bloginfo('url')."\">".get_bloginfo('name')."</a>";
 	$options['position'] = "after";
 	update_option('RSSFooterOptions', $options);
-}
+} elseif ($options['everset'] === true) {
+	if ($options['position'] == "after") {
+		$options['footerstring'] = $options['footerstring']."<br/><br/>%%POSTLINK%%";
+	} else {
+		$options['footerstring'] = "%%POSTLINK%%<br/><br/>".$options['footerstring'];
+	}
+	$options['everset'] = 2;
+	update_option('RSSFooterOptions', $options);
+} 
 
 function embed_rssfooter($content) {
 	if(is_feed()) {
 		$options  = get_option('RSSFooterOptions');
+
+		$postlink = '<a href="'.get_permalink().'">'.get_the_title()."</a>";
+		$bloglink = '<a href="'.get_bloginfo('url').'">'.get_bloginfo('name').'</a>';
+		$blogdesclink = '<a href="'.get_bloginfo('url').'">'.get_bloginfo('name').' - '.get_bloginfo('description').'</a>';
+		
+		$rssfootcontent = stripslashes($options['footerstring']);
+		$rssfootcontent = str_replace("%%POSTLINK%%",$postlink,$rssfootcontent);
+		$rssfootcontent = str_replace("%%BLOGLINK%%",$bloglink,$rssfootcontent);		
+		$rssfootcontent = str_replace("%%BLOGDESCLINK%%",$blogdesclink,$rssfootcontent);		
+		
 		if ($options['position'] == "before") {
-			if($options['postlink']) {
-				$content = '<p><a href="'.get_permalink().'">'.get_the_title()."</a></p>\n" . $content;	
-			}
-			$content = "<p>" . stripslashes($options['footerstring']) . "</p>\n" . $content;
+			$content = "<p>" . $rssfootcontent . "</p>\n" . $content;
 		} else {
-			$content = $content . "<p>" . stripslashes($options['footerstring']) . "</p>\n";
-			if($options['postlink']) {
-				$content = $content . '<p><a href="'.get_permalink().'">'.get_the_title()."</a></p>\n";
-			}
+			$content .= "<p>" . $rssfootcontent . "</p>\n";
 		}
 	}
 	return $content;
@@ -139,7 +159,5 @@ function embed_rssfooter($content) {
 
 add_filter('the_content', 'embed_rssfooter');
 add_filter('the_excerpt_rss', 'embed_rssfooter');
-
-add_action('admin_menu', array('RSSFooter_Admin','add_config_page'));
 
 ?>
