@@ -22,7 +22,7 @@ if ( ! class_exists( 'RSSFooter_Admin' ) ) {
 		
 		function config_page() {
 			if ( isset($_POST['submit']) ) {
-				if (!current_user_can('manage_options')) die(__('You cannot edit the RSS Footer options.'));
+				if (!current_user_can('manage_options')) die(__('You cannot edit the RSS Footer options.', 'rss-footer'));
 				check_admin_referer('rssfooter-config');
 
 				foreach( array('footerstring', 'position') as $val ) {
@@ -40,7 +40,7 @@ if ( ! class_exists( 'RSSFooter_Admin' ) ) {
 			?>
 			<div class="wrap">
 				<a href="http://yoast.com/"><div id="yoast-icon" style="background: url(http://cdn.yoast.com/theme/yoast-32x32.png) no-repeat;" class="icon32"><br /></div></a>
-				<h2><?php _e("RSS Footer options"); ?></h2>
+				<h2><?php _e("RSS Footer options", 'rss-footer'); ?></h2>
 				<div class="postbox-container" style="width:70%;">
 					<div class="metabox-holder">	
 						<div class="meta-box-sortables">
@@ -52,22 +52,22 @@ if ( ! class_exists( 'RSSFooter_Admin' ) ) {
 							$rows = array();
 							$rows[] = array(
 								"id" => "footerstring",
-								"label" => __("Content to put in the footer"),
-								"desc" => __("(HTML allowed)"),
+								"label" => __("Content to put in the footer", 'rss-footer'),
+								"desc" => __("(HTML allowed)", 'rss-footer'),
 								"content" => '<textarea cols="50" onchange="javascript:updatePreview();" rows="10" id="footerstring" name="footerstring">'.stripslashes(htmlentities($options['footerstring'])).'</textarea>',
 							);
 							$rows[] = array(
-								"label" => __('Explanation'),
-								"content" => '<p>'.__('You can use the following variables within the content, they will be replaced by the value on the right.').'</p>'.
+								"label" => __('Explanation', 'rss-footer'),
+								"content" => '<p>'.__('You can use the following variables within the content, they will be replaced by the value on the right.', 'rss-footer').'</p>'.
 								'<ul>'.
-								'<li><strong>%%POSTLINK%%</strong> : '.__('A link to the post, with the title as anchor text.').'</li>'.
-								'<li><strong>%%BLOGLINK%%</strong> : '.__("A link to your site, with your site's name as anchor text.").'</li>'.
-								'<li><strong>%%BLOGDESCLINK%%</strong> : '.__("A link to your site, with your site's name and description as anchor text.").'</li>'.
+								'<li><strong>%%POSTLINK%%</strong> : '.__('A link to the post, with the title as anchor text.', 'rss-footer').'</li>'.
+								'<li><strong>%%BLOGLINK%%</strong> : '.__("A link to your site, with your site's name as anchor text.", 'rss-footer').'</li>'.
+								'<li><strong>%%BLOGDESCLINK%%</strong> : '.__("A link to your site, with your site's name and description as anchor text.", 'rss-footer').'</li>'.
 								'</ul>'.
-								'<p>'.__('If you update the text above, check the preview below:').' </p>',
+								'<p>'.__('If you update the text above, check the preview below:', 'rss-footer').' </p>',
 							);
-							$this->postbox('rssfootercontent',__('Content of your RSS Footer'),$this->form_table($rows));
-							$this->postbox('rssfooterpreview',__('Preview of your RSS Footer'),'<div id="preview">'.__('You need JavaScript enabled for the preview to work.').'</div><script type="text/javascript" charset="utf-8">
+							$this->postbox('rssfootercontent',__('Content of your RSS Footer', 'rss-footer'),$this->form_table($rows));
+							$this->postbox('rssfooterpreview',__('Preview of your RSS Footer', 'rss-footer'),'<div id="preview">'.__('You need JavaScript enabled for the preview to work.', 'rss-footer').'</div><script type="text/javascript" charset="utf-8">
 								function nl2br(str) {
 									return (str + \'\').replace(/([^>]?)\n/g, \'$1\'+ \'<br/>\' +\'\n\');
 								}
@@ -82,20 +82,20 @@ if ( ! class_exists( 'RSSFooter_Admin' ) ) {
 							$rows = array();
 							$rows[] = array(
 								"id" => "position",
-								"label" => __("Content position"),
+								"label" => __("Content position", 'rss-footer'),
 								"content" => '<select name="position" id="position">
-									<option value="after" '.selected($options['position'],"after",false).'>'.__('after').'</option>
-									<option value="before" '.selected($options['position'],"before",false).'>'.__('before').'</option>
+									<option value="after" '.selected($options['position'],"after",false).'>'.__('after', 'rss-footer').'</option>
+									<option value="before" '.selected($options['position'],"before",false).'>'.__('before', 'rss-footer').'</option>
 								</select>',
 							);
 							$rows[] = array(
-								"label" => __('Explanation'),
-								"content" => __("The position determines whether the content you've entered above will appear below or above the post.")
+								"label" => __('Explanation', 'rss-footer'),
+								"content" => __("The position determines whether the content you've entered above will appear below or above the post.", 'rss-footer')
 							);
 							$this->postbox('rssfootersettings','Settings',$this->form_table($rows));
 							?>
 							<div class="submit">
-								<input type="submit" class="button-primary" name="submit" value="<?php _e('Update RSS Footer Settings') ?> &raquo;" />
+								<input type="submit" class="button-primary" name="submit" value="<?php _e('Update RSS Footer Settings', 'rss-footer') ?> &raquo;" />
 							</div>
 							</form>
 						</div>
@@ -122,7 +122,7 @@ if ( ! class_exists( 'RSSFooter_Admin' ) ) {
 $options  = get_option('RSSFooterOptions');
 if (!isset($options['everset'])) {
 	// Set default values
-	$options['footerstring'] = "%%POSTLINK%% ".__("is a post from").": <a href=\"".get_bloginfo('url')."\">".get_bloginfo('name')."</a>";
+	$options['footerstring'] = "%%POSTLINK%% ".__("is a post from", 'rss-footer').": <a href=\"".get_bloginfo('url')."\">".get_bloginfo('name')."</a>";
 	$options['position'] = "after";
 	update_option('RSSFooterOptions', $options);
 } elseif ($options['everset'] === true) {
