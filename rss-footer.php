@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: RSS Footer
-Version: 0.9.5
+Version: 0.9.6
 Plugin URI: http://yoast.com/wordpress/rss-footer/
 Description: Allows you to add a line of content to the end of your RSS feed articles.
 Author: Joost de Valk

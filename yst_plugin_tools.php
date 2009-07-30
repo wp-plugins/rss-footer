@@ -2,7 +2,7 @@
 
 /**
  * Backend Class for use in all Yoast plugins
- * Version 0.1.2
+ * Version 0.2
  */
 
 if (!class_exists('Yoast_Plugin_Admin')) {
@@ -13,6 +13,8 @@ if (!class_exists('Yoast_Plugin_Admin')) {
 		var $longname	= '';
 		var $shortname	= '';
 		var $ozhicon	= '';
+		var $optionname = '';
+		var $homepage	= '';
 		var $accesslvl	= 'manage_options';
 		
 		function Yoast_Plugin_Admin() {
@@ -57,7 +59,7 @@ if (!class_exists('Yoast_Plugin_Admin')) {
 			static $this_plugin;
 			if( empty($this_plugin) ) $this_plugin = $this->filename;
 			if ( $file == $this_plugin ) {
-				$settings_link = '<a href="' . $this->plugin_options_url() . '">' . __('Settings', 'rss-footer') . '</a>';
+				$settings_link = '<a href="' . $this->plugin_options_url() . '">' . __('Settings') . '</a>';
 				array_unshift( $links, $settings_link );
 			}
 			return $links;
@@ -74,6 +76,22 @@ if (!class_exists('Yoast_Plugin_Admin')) {
 				wp_enqueue_script('thickbox');
 				wp_enqueue_script('media-upload');
 			}
+		}
+
+		/**
+		 * Create a Checkbox input field
+		 */
+		function checkbox($id, $label) {
+			$options = get_option($this->optionname);
+			return '<input type="checkbox" id="'.$id.'" name="'.$id.'"'. checked($options[$id],true,false).'/> <label for="'.$id.'">'.$label.'</label><br/>';
+		}
+		
+		/**
+		 * Create a Text input field
+		 */
+		function textinput($id, $label) {
+			$options = get_option($this->optionname);
+			return '<label for="'.$id.'">'.$label.':</label><br/><input size="45" type="text" id="'.$id.'" name="'.$id.'" value="'.$options[$id].'"/><br/><br/>';
 		}
 
 		/**
@@ -98,14 +116,14 @@ if (!class_exists('Yoast_Plugin_Admin')) {
 		function form_table($rows) {
 			$content = '<table class="form-table">';
 			foreach ($rows as $row) {
-				$content .= '<tr valign="top"><th scrope="row">';
+				$content .= '<tr><th valign="top" scrope="row">';
 				if (isset($row['id']) && $row['id'] != '')
 					$content .= '<label for="'.$row['id'].'">'.$row['label'].':</label>';
 				else
 					$content .= $row['label'];
 				if (isset($row['desc']) && $row['desc'] != '')
 					$content .= '<br/><small>'.$row['desc'].'</small>';
-				$content .= '</th><td>';
+				$content .= '</th><td valign="top">';
 				$content .= $row['content'];
 				$content .= '</td></tr>'; 
 			}
@@ -117,21 +135,21 @@ if (!class_exists('Yoast_Plugin_Admin')) {
 		 * Create a "plugin like" box.
 		 */
 		function plugin_like() {
-			$content = '<p>'.__('Why not do any or all of the following:', 'rss-footer').'</p>';
+			$content = '<p>'.__('Why not do any or all of the following:','ystplugin').'</p>';
 			$content .= '<ul>';
-			$content .= '<li>'.__('Link to it so other folks can find out about it.', 'rss-footer').'</li>';
-			$content .= '<li><a href="http://wordpress.org/extend/plugins/'.$this->hook.'/">'.__('Give it a good rating on WordPress.org.', 'rss-footer').'</a></li>';
-			$content .= '<li><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=2017947">'.__('Donate a token of your appreciation.', 'rss-footer').'</a></li>';
+			$content .= '<li><a href="'.$this->homepage.'">'.__('Link to it so other folks can find out about it.','ystplugin').'</a></li>';
+			$content .= '<li><a href="http://wordpress.org/extend/plugins/'.$this->hook.'/">'.__('Give it a good rating on WordPress.org.','ystplugin').'</a></li>';
+			$content .= '<li><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=2017947">'.__('Donate a token of your appreciation.','ystplugin').'</a></li>';
 			$content .= '</ul>';
-			$this->postbox($this->hook.'like', __('Like this plugin?', 'rss-footer'), $content);
+			$this->postbox($this->hook.'like', 'Like this plugin?', $content);
 		}	
 		
 		/**
 		 * Info box with link to the support forums.
 		 */
 		function plugin_support() {
-			$content = '<p>'.__('If you have any problems with this plugin or good ideas for improvements or new features, please talk about them in the', 'rss-footer').' <a href="http://wordpress.org/tags/'.$this->hook.'">'.__("Support forums", 'rss-footer').'</a>.</p>';
-			$this->postbox($this->hook.'support', __('Need support?', 'rss-footer'), $content);
+			$content = '<p>'.__('If you have any problems with this plugin or good ideas for improvements or new features, please talk about them in the','ystplugin').' <a href="http://wordpress.org/tags/'.$this->hook.'">'.__("Support forums",'ystplugin').'</a>.</p>';
+			$this->postbox($this->hook.'support', 'Need support?', $content);
 		}
 
 		/**
@@ -147,11 +165,11 @@ if (!class_exists('Yoast_Plugin_Admin')) {
 					$content .= '<a class="rsswidget" href="'.clean_url( $item['link'], $protocolls=null, 'display' ).'">'. htmlentities($item['title']) .'</a> ';
 					$content .= '</li>';
 				}
-				$content .= '<li class="rss"><a href="http://yoast.com/feed/">'.__('Subscribe with RSS', 'rss-footer').'</a></li>';
-				$content .= '<li class="email"><a href="http://yoast.com/email-blog-updates/">'.__('Subscribe by email', 'rss-footer').'</a></li>';
-				$this->postbox('yoastlatest', __('Latest news from Yoast', 'rss-footer'), $content);
+				$content .= '<li class="rss"><a href="http://yoast.com/feed/">Subscribe with RSS</a></li>';
+				$content .= '<li class="email"><a href="http://yoast.com/email-blog-updates/">Subscribe by email</a></li>';
+				$this->postbox('yoastlatest', 'Latest news from Yoast', $content);
 			} else {
-				$this->postbox('yoastlatest', __('Latest news from Yoast', 'rss-footer'), __('Nothing to say...', 'rss-footer'));
+				$this->postbox('yoastlatest', 'Latest news from Yoast', 'Nothing to say...');
 			}
 		}
 
@@ -165,10 +183,19 @@ if (!class_exists('Yoast_Plugin_Admin')) {
 		}
 
 		function db_widget() {
-			require_once(ABSPATH.WPINC.'/rss.php');  
-			if ( $rss = fetch_rss( 'http://feeds2.feedburner.com/joostdevalk' ) ) {
+			$options = get_option('yoastdbwidget');
+			if (isset($_POST['yoast_removedbwidget'])) {
+				$options['removedbwidget'] = true;
+				update_option('yoastdbwidget',$options);
+			}			
+			if ($options['removedbwidget']) {
+				echo "If you reload, this widget will be gone and never appear again, unless you decide to delete the database option 'yoastdbwidget'.";
+				return;
+			}
+			require_once(ABSPATH.WPINC.'/rss.php');
+			if ( $rss = fetch_rss( 'http://yoast.com/feed/' ) ) {
 				echo '<div class="rss-widget">';
-				echo '<a href="http://yoast.com/" title="'.__('Go to Yoast.com', 'rss-footer').'"><img src="http://cdn.yoast.com/yoast-logo-rss.png" class="alignright" alt="Yoast"/></a>';			
+				echo '<a href="http://yoast.com/" title="Go to Yoast.com"><img src="http://netdna.yoast.com/yoast-logo-rss.png" class="alignright" alt="Yoast"/></a>';			
 				echo '<ul>';
 				$rss->items = array_slice( $rss->items, 0, 3 );
 				foreach ( (array) $rss->items as $item ) {
@@ -180,16 +207,19 @@ if (!class_exists('Yoast_Plugin_Admin')) {
 				}
 				echo '</ul>';
 				echo '<div style="border-top: 1px solid #ddd; padding-top: 10px; text-align:center;">';
-				echo '<a href="http://feeds2.feedburner.com/joostdevalk"><img src="'.get_bloginfo('wpurl').'/wp-includes/images/rss.png" alt=""/> '.__('Subscribe with RSS', 'rss-footer').'</a>';
+				echo '<a href="http://feeds2.feedburner.com/joostdevalk"><img src="'.get_bloginfo('wpurl').'/wp-includes/images/rss.png" alt=""/> Subscribe with RSS</a>';
 				echo ' &nbsp; &nbsp; &nbsp; ';
-				echo '<a href="http://yoast.com/email-blog-updates/"><img src="http://cdn.yoast.com/email_sub.png" alt=""/> '.__('Subscribe by email', 'rss-footer').'</a>';
+				echo '<a href="http://yoast.com/email-blog-updates/"><img src="http://netdna.yoast.com/email_sub.png" alt=""/> Subscribe by email</a>';
+				echo '<form class="alignright" method="post"><input type="hidden" name="yoast_removedbwidget" value="true"/><input title="Remove this widget from all users dashboards" type="submit" value="X"/></form>';
 				echo '</div>';
 				echo '</div>';
 			}
 		}
 
 		function widget_setup() {
-		    wp_add_dashboard_widget( 'yoast_db_widget' , __('The Latest news from Yoast', 'rss-footer') , array(&$this, 'db_widget'));
+			$options = get_option('yoastdbwidget');
+			if (!$options['removedbwidget'])
+		    	wp_add_dashboard_widget( 'yoast_db_widget' , 'The Latest news from Yoast' , array(&$this, 'db_widget'));
 		}
 	}
 }
