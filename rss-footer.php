@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: RSS Footer
-Version: 0.9.6
+Version: 0.9.7
 Plugin URI: http://yoast.com/wordpress/rss-footer/
 Description: Allows you to add a line of content to the end of your RSS feed articles.
 Author: Joost de Valk
@@ -54,7 +54,7 @@ if ( ! class_exists( 'RSSFooter_Admin' ) ) {
 								"id" => "footerstring",
 								"label" => __("Content to put in the footer", 'rss-footer'),
 								"desc" => __("(HTML allowed)", 'rss-footer'),
-								"content" => '<textarea cols="50" onchange="javascript:updatePreview();" rows="10" id="footerstring" name="footerstring">'.stripslashes(htmlentities($options['footerstring'])).'</textarea>',
+								"content" => '<textarea cols="50" onchange="javascript:updatePreview();" rows="10" id="footerstring" name="footerstring">'.stripslashes(htmlentities($options['footerstring'], ENT_QUOTES, get_bloginfo('charset'))).'</textarea>',
 							);
 							$rows[] = array(
 								"label" => __('Explanation', 'rss-footer'),
@@ -143,7 +143,7 @@ function embed_rssfooter($content) {
 		$bloglink = '<a href="'.get_bloginfo('url').'">'.get_bloginfo('name').'</a>';
 		$blogdesclink = '<a href="'.get_bloginfo('url').'">'.get_bloginfo('name').' - '.get_bloginfo('description').'</a>';
 		
-		$rssfootcontent = stripslashes($options['footerstring']);
+		$rssfootcontent = stripslashes($options['footerstring'], ENT_QUOTES, get_bloginfo('charset')));
 		$rssfootcontent = str_replace("%%POSTLINK%%",$postlink,$rssfootcontent);
 		$rssfootcontent = str_replace("%%BLOGLINK%%",$bloglink,$rssfootcontent);		
 		$rssfootcontent = str_replace("%%BLOGDESCLINK%%",$blogdesclink,$rssfootcontent);		

@@ -3,8 +3,8 @@ Contributors: joostdevalk
 Donate link: http://yoast.com/donate/
 Tags: rss, footer
 Requires at least: 2.7
-Tested up to: 2.8.2
-stable tag: 0.9.6
+Tested up to: 3.0.1
+stable tag: 0.9.7
 
 This plugin makes it easy to add a line of content to the beginning or the end of all the articles in your feeds, for instance to display a link back to your blog.
 
@@ -16,9 +16,13 @@ More info:
 
 * [RSS Footer plugin](http://yoast.com/wordpress/rss-footer/).
 * Read more about [WordPress SEO](http://yoast.com/articles/wordpress-seo/) so you can get the most out of this plugin.
+* Check out what the author has to say about [WordPress Hosting](http://yoast.com/articles/wordpress-hosting/) too, it might help you in the future!
 * Check out the other [Wordpress plugins](http://yoast.com/wordpress/) by the same author.
 
 == Changelog ==
+
+= 0.9.7 =
+* Minor fix to fix UTF8 issues, thanks to [this forum thread](http://wordpress.org/support/topic/plugin-rss-footer-make-it-utf-8-compatible).
 
 = 0.9.6 =
 * Upgraded backend class
