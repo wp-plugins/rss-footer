@@ -4,7 +4,7 @@ Donate link: http://yoast.com/donate/
 Tags: rss, footer
 Requires at least: 2.7
 Tested up to: 3.0.1
-stable tag: 0.9.8
+stable tag: 0.9.9
 
 This plugin is no longer maintained and replaced by Yoast SEO.
 
